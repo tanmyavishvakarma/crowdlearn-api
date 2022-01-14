@@ -5,7 +5,7 @@ const router = express.Router()
 const bcrypt=require('bcrypt')
 const cookieparser=require('cookie-parser')
 const bodyParser=require("body-parser")
-const registertemplatecopy=require('../models/models')
+const registertemplatecopy=require('../models/user')
 
 const nodemailer = require('nodemailer');
 
