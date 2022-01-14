@@ -40,7 +40,7 @@ router.post('/register',async (request,response)=>{
           to: "tdizzle528@gmail.com",
           from: "crowdlearn69@gmail.com",
           subject: 'Registration successful',
-          html: '<h2>WELCOME TO CROWDLEARN</h2> Your ONE-TIME-PASSWORD is'+otp,
+          html: `<h2>WELCOME TO CROWDLEARN</h2> Your ONE-TIME-PASSWORD is ${otp}`
         })
   
         .catch((err) => {
