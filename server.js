@@ -38,7 +38,9 @@ app.use(cookieparser("secret"))
 
 app.use(express.json())
 app.use('/',routes)
-
-app.listen(4002,()=>console.log("server running on port 4002"))
+const PORT=process.env.PORT||5000
+app.listen(PORT,()=>{
+  console.log("server is running succesfully")
+})
 
 module.exports = app;
