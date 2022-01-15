@@ -30,7 +30,7 @@ router.post('/register',async (request,response)=>{
         username:request.body.username,
         email:request.body.email,
     })
-    registeruser.save()
+    await registeruser.save()
     // .then(registeruser=>{
       transporter
         .sendMail({
