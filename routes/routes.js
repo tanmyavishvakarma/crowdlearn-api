@@ -12,26 +12,26 @@ const res = require('express/lib/response')
 
 
 router.post('/register', (request,response)=>{
+  const otp=Math.floor(100000 + Math.random() * 900000)
+  const transporter = nodemailer.createTransport({
+    service: 'Gmail',
+    secure: false,
+    port: 535,
+    auth: {
+      user: "crowdlearn69@gmail.com",
+      pass: "abcd@1234",
+    },
+    tls: {
+      rejectUnauthorized: false,
+    },
+    connectionTimeout: 5 * 60 * 1000,
+  });
     const registeruser=new registertemplatecopy({
         username:request.body.username,
         email:request.body.email,
     })
     registeruser.save()
-
-    const otp=Math.floor(100000 + Math.random() * 900000)
-    const transporter = nodemailer.createTransport({
-        service: 'Gmail',
-        secure: false,
-        port: 535,
-        auth: {
-          user: "crowdlearn69@gmail.com",
-          pass: "abcd@1234",
-        },
-        tls: {
-          rejectUnauthorized: false,
-        },
-        connectionTimeout: 5 * 60 * 1000,
-      });
+    .then(registeruser=>{
       transporter
         .sendMail({
           to: registeruser.email,
@@ -39,15 +39,13 @@ router.post('/register', (request,response)=>{
           subject: 'Registration successful',
           html: `<h2>WELCOME TO CROWDLEARN</h2> Your ONE-TIME-PASSWORD is ${otp}`
         })
-  
+        const token=jwt.sign({username:registeruser.username},"jwtsecret")
+        console.log(token)
+        response.status(200).json({auth:true,token:token,otp:otp});
+      })
         .catch((err) => {
           console.log(err);
         });
-      const token=jwt.sign({username:registeruser.username},"jwtsecret")
-      console.log(token)
-      response.status(200).json({auth:true,token:token,otp:otp});
-      
-
 });
 router.put('/verifyuser/:email',async (req,res)=>{
   registertemplatecopy.findOneAndUpdate({email: req.params.email},{verified:true})
