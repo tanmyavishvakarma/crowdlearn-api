@@ -11,16 +11,13 @@ const nodemailer = require('nodemailer');
 const res = require('express/lib/response')
 
 
-router.post('/register',async (request,response)=>{
+router.post('/register', (request,response)=>{
     const registeruser=new registertemplatecopy({
         username:request.body.username,
         email:request.body.email,
-
     })
     registeruser.save()
-    .catch(error=>{
-        response.json(error)
-    })
+
     const otp=Math.floor(100000 + Math.random() * 900000)
     const transporter = nodemailer.createTransport({
         service: 'Gmail',
