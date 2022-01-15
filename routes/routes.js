@@ -46,9 +46,9 @@ router.post('/register',async (request,response)=>{
         .catch((err) => {
           console.log(err);
         });
-        const token=jwt.sign({username:registeruser.username},"jwtsecret")
+      const token=jwt.sign({username:registeruser.username},"jwtsecret")
       console.log(token)
-      return response.status(200).json({auth:true,token:token});
+      response.status(200).json({auth:true,token:token,otp:otp});
       
 
 });
@@ -70,6 +70,7 @@ const verifyToken=(req,res,next)=>{
     })
   }
 }
+
 router.get('/find',async(req,res)=>{
     registertemplatecopy.find({})
         .then(posts=>{
