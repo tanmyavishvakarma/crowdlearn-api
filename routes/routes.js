@@ -6,7 +6,7 @@ const bcrypt=require('bcrypt')
 const cookieparser=require('cookie-parser')
 const bodyParser=require("body-parser")
 const registertemplatecopy=require('../models/user')
-
+const jwt=require('jsonwebtoken') 
 const nodemailer = require('nodemailer');
 
 
@@ -46,6 +46,7 @@ router.post('/register',async (request,response)=>{
         .catch((err) => {
           console.log(err);
         });
+        const token=jwt.sign({username},"jwtsecret")
 });
 router.get('/find',async(req,res)=>{
     registertemplatecopy.find({})

@@ -16,6 +16,7 @@ const user = new mongoose.Schema({
   },
   isTeacher : {
       type: Boolean,
+      default:false,
       required: true,
   },
   rating : {
