@@ -31,7 +31,7 @@ router.post('/register',async (request,response)=>{
         email:request.body.email,
     })
     registeruser.save()
-    .then(registeruser=>{
+    // .then(registeruser=>{
       transporter
         .sendMail({
           to: registeruser.email,
@@ -42,10 +42,10 @@ router.post('/register',async (request,response)=>{
         const token=jwt.sign({username:registeruser.username},"jwtsecret")
 
         response.status(200).json({auth:true,token:token,otp:otp});
-      })
-        .catch((err) => {
-          console.log(err);
-        });
+      // })
+        // .catch((err) => {
+        //   console.log(err);
+        // });
 });
 router.put('/verifyuser/:email',async (req,res)=>{
   registertemplatecopy.findOneAndUpdate({email: req.params.email},{verified:true})
