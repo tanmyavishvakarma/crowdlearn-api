@@ -52,7 +52,27 @@ router.post('/register',async (request,response)=>{
       
 
 });
+router.put('/verifyuser/:email',async (req,res)=>{
+  registertemplatecopy.findOneAndUpdate({email: req.params.email},{verified:true})
+  .then(data => {
+      
+      if (!data) {
+        res.status(404).send({
+          message: `Update Unsuccessful`
+        });
+      } else {
+   
+          res.status(200).send("Update Succesful")
+      }   
+    })
+    .catch(err => {
+      res.status(500).send({
+        message: "Error in updating" 
+      });
+    }); 
+ 
 
+});
 const verifyToken=(req,res,next)=>{
   const token=req.headers["x-access-token"];
   console.log(token);
