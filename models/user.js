@@ -4,6 +4,7 @@ const user = new mongoose.Schema({
   username: {
     type: String,
     required: true,
+
   },
   // verified:{
   //   type:Boolean,
