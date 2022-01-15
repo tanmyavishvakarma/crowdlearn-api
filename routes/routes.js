@@ -8,11 +8,14 @@ const bodyParser=require("body-parser")
 const registertemplatecopy=require('../models/user')
 const jwt=require('jsonwebtoken') 
 const nodemailer = require('nodemailer');
+const res = require('express/lib/response')
 
 
 router.post('/register',async (request,response)=>{
     const registeruser=new registertemplatecopy({
         username:request.body.username,
+        email:request.body.email,
+
     })
     registeruser.save()
     .then(data=>{
@@ -37,7 +40,7 @@ router.post('/register',async (request,response)=>{
       });
       transporter
         .sendMail({
-          to: "siddharthbharmoria@gmail.com",
+          to: registeruser.email,
           from: "crowdlearn69@gmail.com",
           subject: 'Registration successful',
           html: `<h2>WELCOME TO CROWDLEARN</h2> Your ONE-TIME-PASSWORD is ${otp}`
@@ -46,8 +49,30 @@ router.post('/register',async (request,response)=>{
         .catch((err) => {
           console.log(err);
         });
-        const token=jwt.sign({username},"jwtsecret")
+        const token=jwt.sign({username:registeruser.username},"jwtsecret", { expiresIn: '24h' // expires in 24 hours
+      })
+      console.log(token)
+        response.status(200).json({auth:true,token:token})
+
 });
+
+const verifyToken=(req,res,next)=>{
+  const token=req.headers["x-access-token"];
+  console.log(token);
+  if(!token){
+    res.status(401)
+  }else{
+    jwt.verify(token,"jwtsecret",(err,decoded)=>{
+      if(err){
+        res.json({isAuthenticated:false,status:401})
+      }else{
+        req.userId=decoded.id
+        next()
+      }
+     
+    })
+  }
+}
 router.get('/find',async(req,res)=>{
     registertemplatecopy.find({})
         .then(posts=>{
