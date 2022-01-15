@@ -18,9 +18,7 @@ router.post('/register',async (request,response)=>{
 
     })
     registeruser.save()
-    .then(data=>{
-        response.json(data)
-    })
+ 
     .catch(error=>{
         response.json(error)
     })
@@ -52,7 +50,8 @@ router.post('/register',async (request,response)=>{
         const token=jwt.sign({username:registeruser.username},"jwtsecret", { expiresIn: '24h' // expires in 24 hours
       })
       console.log(token)
-        response.status(200).json({auth:true,token:token})
+      return response.status(200).json({auth:true,token:token});
+      
 
 });
 
