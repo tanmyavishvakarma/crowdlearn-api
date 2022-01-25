@@ -24,9 +24,13 @@ router.post('/register',async (request,response)=>{
     tls: {
       rejectUnauthorized: false,
     },
-    connectionTimeout: 5 * 60 * 1000,
+    // connectionTimeout: 5 * 60 * 1000,
   });
+  if(request.body.username ===undefined || request.body.email===undefined){
+    response.status(401).json({message:"bad request missing parameters"})
+  }else{
     const registeruser=new registertemplatecopy({
+   
         username:request.body.username,
         email:request.body.email,
     })
@@ -46,6 +50,7 @@ router.post('/register',async (request,response)=>{
         // .catch((err) => {
         //   console.log(err);
         // });
+      }
 });
 router.put('/verifyuser/:email',async (req,res)=>{
   registertemplatecopy.findOneAndUpdate({email: req.params.email},{verified:true})

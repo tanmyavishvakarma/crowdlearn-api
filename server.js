@@ -44,3 +44,31 @@ app.listen(PORT,()=>{
 })
 
 module.exports = app;
+
+
+// router.put('/verifyuser',async (req,res)=>{
+//   User.findByIdAndUpdate({email: req.params.email},{verified:true})
+//   .then(data => {
+      
+//       if (!data) {
+//         res.status(404).send({
+//           message: `Update Unsuccessful`
+//         });
+//       } else {
+//           // const token = generateJwtToken(savedUser._id, savedUser.role);
+//           // const { _id, name, email,mobile, role } = savedUser;
+//           // res.status(200).json({
+//           //   token,
+//           //   user: { _id, name, email,mobile, role },
+//           // });
+//           res.status(200).send("Update Succesful")
+//       }   
+//     })
+//     .catch(err => {
+//       res.status(500).send({
+//         message: "Error in updating" 
+//       });
+//     }); 
+ 
+
+// });
