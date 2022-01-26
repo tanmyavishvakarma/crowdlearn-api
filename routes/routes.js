@@ -29,13 +29,13 @@ router.post('/register',async (request,response)=>{
   if(request.body.username ===undefined || request.body.email===undefined){
     response.status(401).json({message:"bad request missing parameters"})
   }else{
-  const registeruser={username : request.body.username, email : request.body.email}
-    // const registeruser=new registertemplatecopy({
+  // const registeruser={username : request.body.username, email : request.body.email}
+    const registeruser=new registertemplatecopy({
    
-    //     username:request.body.username,
-    //     email:request.body.email,
-    // })
-    // await registeruser.save()
+        username:request.body.username,
+        email:request.body.email,
+    })
+ 
     // .then(registeruser=>{
       transporter
         .sendMail({
@@ -45,7 +45,7 @@ router.post('/register',async (request,response)=>{
           html: `<h2>WELCOME TO CROWDLEARN</h2> Your ONE-TIME-PASSWORD is ${otp}`
         })
         const token=jwt.sign({username:registeruser.username},"jwtsecret")
-
+        registeruser.save()
         response.status(200).json({auth:true,token:token,otp:otp});
       // })
         // .catch((err) => {
