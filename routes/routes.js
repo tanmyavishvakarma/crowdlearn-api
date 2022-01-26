@@ -34,7 +34,7 @@ router.post('/register',async (request,response)=>{
         username:request.body.username,
         email:request.body.email,
     })
-    await registeruser.save()
+    // await registeruser.save()
     // .then(registeruser=>{
       transporter
         .sendMail({
@@ -95,7 +95,7 @@ router.get('/find',async(req,res)=>{
     registertemplatecopy.find({})
         .then(posts=>{
             res.json(posts)
-            res.send(posts)  
+       
    
         }).catch(err => {
             console.log(err)
