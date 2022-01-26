@@ -36,7 +36,9 @@ router.post('/register',async (request,response)=>{
         email:request.body.email,
     })
     console.log(registeruser);
-    await registeruser.save()
+    await registeruser.save().catch((err) => {
+      console.log(err);
+    });
     // .then(registeruser=>{
       transporter
         .sendMail({
@@ -46,11 +48,8 @@ router.post('/register',async (request,response)=>{
           html: `<h2>WELCOME TO CROWDLEARN</h2> Your ONE-TIME-PASSWORD is ${otp}`
         })
         const token=jwt.sign({username:registeruser.username},"jwtsecret")
-       
-        response.status(200).json({auth:true,token:token,otp:otp})
-        .catch((err) => {
-          console.log(err);
-        });
+        response.status(200).json({auth:true,token:token,otp:otp.toString()})
+        
       }
 });
 router.put('/verifyuser/:email',async (req,res)=>{
