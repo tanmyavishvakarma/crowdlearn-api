@@ -29,11 +29,12 @@ router.post('/register',async (request,response)=>{
   if(request.body.username ===undefined || request.body.email===undefined){
     response.status(401).json({message:"bad request missing parameters"})
   }else{
-    const registeruser=new registertemplatecopy({
+  const registeruser={username : request.body.username, email : request.body.email}
+    // const registeruser=new registertemplatecopy({
    
-        username:request.body.username,
-        email:request.body.email,
-    })
+    //     username:request.body.username,
+    //     email:request.body.email,
+    // })
     // await registeruser.save()
     // .then(registeruser=>{
       transporter
