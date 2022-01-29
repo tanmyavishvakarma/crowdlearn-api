@@ -22,9 +22,9 @@ const transporter = nodemailer.createTransport({
   },
   // connectionTimeout: 5 * 60 * 1000,
 });
-
+//change
 function createToken(user) {
-  if (!user.username) {
+  if (user.username) {
     return jwt.sign(
       { username: user.username, email: user.email },
       "jwtsecret"
@@ -112,13 +112,13 @@ router.post("/login", async (request, response) => {
       transporter.sendMail({
         to: request.body.email,
         from: "crowdlearn69@gmail.com",
-        subject: "CROWD LEARNT OTP",
-        html: `<h2>WELCOME TO CROWDLEARN</h2> Your NEW ONE-TIME-PASSWORD is ${otp}`,
+        subject: "CROWD LEARNT LOGIN OTP ",
+        html: `<h2>CROWD LEARN LOGIN ATTEMPT</h2> Your NEW ONE-TIME-PASSWORD is ${otp}`,
       });
       const token = createToken(registeruser);
       response
         .status(200)
-        .json({ token: token, otp: otp.toString(), otpstatus: "otp-resent" });
+        .json({ token: token, otp: otp.toString() });
     }
   }
 });
