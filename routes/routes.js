@@ -61,13 +61,15 @@ router.post('/register',async (request,response)=>{
           subject: 'CROWD LEARNT OTP',
           html: `<h2>WELCOME TO CROWDLEARN</h2> Your ONE-TIME-PASSWORD is ${otp}`
         })
+        
         const token=jwt.sign({username:registeruser.username},"jwtsecret")
+       
         response.status(200).json({token:token,otp:otp.toString()})
         
       }
 });
 
-router.post('/resendotp',async (request,response)=>{
+router.post('/login',async (request,response)=>{
   const otp=Math.floor(100000 + Math.random() * 900000)
   const transporter = nodemailer.createTransport({
     service: 'Gmail',
@@ -97,6 +99,47 @@ router.post('/resendotp',async (request,response)=>{
       }
 });
 
+router.post('/resendotp',async (request,response)=>{
+  const user= await registertemplatecopy.findOne({email: request.body.email})
+  const numberoftries=user.otptries
+  await registertemplatecopy.findOneAndUpdate({email: request.body.email},{otptries:numberoftries+1})
+  if(numberoftries+1>=3){
+    console.log("Tries ", numberoftries)
+    return response.status(403).json({message:"too many unsuccessful tries"})
+  }else{
+
+  
+
+  const otp=Math.floor(100000 + Math.random() * 900000)
+  const transporter = nodemailer.createTransport({
+    service: 'Gmail',
+    secure: false,
+    port: 535,
+    auth: {
+      user: "crowdlearn69@gmail.com",
+      pass: "abcd@1234",
+    },
+    tls: {
+      rejectUnauthorized: false,
+    },
+    // connectionTimeout: 5 * 60 * 1000,
+  });
+  if(request.body.username ===undefined || request.body.email===undefined || request.body.username ==="" || request.body.email ===""  ){
+    response.status(401).json({message:"bad request missing parameters"})
+  }else{
+      transporter
+        .sendMail({
+          to: request.body.email,
+          from: "crowdlearn69@gmail.com",
+          subject: 'CROWD LEARNT OTP',
+          html: `<h2>WELCOME TO CROWDLEARN</h2> Your NEW ONE-TIME-PASSWORD is ${otp}`
+        })
+        const token=jwt.sign({username:request.body.username},"jwtsecret")
+        response.status(200).json({token:token,otp:otp.toString(),otpstatus:"otp did not match"})
+      }
+    }
+});
+
 router.put('/verifyuser/:email',async (req,res)=>{
   registertemplatecopy.findOneAndUpdate({email: req.params.email},{verified:true})
   .then(data => {
@@ -124,5 +167,6 @@ router.get('/find',async(req,res)=>{
             console.log(err)
           })
 })
+
 
 module.exports=router

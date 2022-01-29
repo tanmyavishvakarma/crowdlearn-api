@@ -29,6 +29,11 @@ const user = new mongoose.Schema({
     default: 0,
     required: false,
   },
+  otptries:{
+    type: Number,
+    default:1,
+    required: true,
+  },
   dateCreated : {
     type: Date,
     default : Date.now(),
