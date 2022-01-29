@@ -10,6 +10,22 @@ const jwt=require('jsonwebtoken')
 const nodemailer = require('nodemailer');
 const res = require('express/lib/response')
 
+const verifyToken=(req,res,next)=>{
+  const token=req.headers["x-access-token"];
+  console.log(token);
+  if(!token){
+    return res.status(401)
+  }else{
+    jwt.verify(token,"jwtsecret",(err,user)=>{
+      if(err){
+        return res.status(403);
+      }else{
+        req.user=user
+        next()
+      }
+    })
+  }
+}
 
 router.post('/register',async (request,response)=>{
   const otp=Math.floor(100000 + Math.random() * 900000)
@@ -26,10 +42,10 @@ router.post('/register',async (request,response)=>{
     },
     // connectionTimeout: 5 * 60 * 1000,
   });
-  if(request.body.username ===undefined || request.body.email===undefined){
+  if(request.body.username ===undefined || request.body.email===undefined || request.body.username ==="" || request.body.email ==="" ){
     response.status(401).json({message:"bad request missing parameters"})
   }else{
-  // const registeruser={username : request.body.username, email : request.body.email}
+
     const registeruser=new registertemplatecopy({
    
         username:request.body.username,
@@ -38,20 +54,49 @@ router.post('/register',async (request,response)=>{
     console.log(registeruser);
     await registeruser.save().catch((err) => {
       console.log(err);
-    });
-    // .then(registeruser=>{
-      transporter
+    });      transporter
         .sendMail({
           to: registeruser.email,
           from: "crowdlearn69@gmail.com",
-          subject: 'Registration successful',
+          subject: 'CROWD LEARNT OTP',
           html: `<h2>WELCOME TO CROWDLEARN</h2> Your ONE-TIME-PASSWORD is ${otp}`
         })
         const token=jwt.sign({username:registeruser.username},"jwtsecret")
-        response.status(200).json({auth:true,token:token,otp:otp.toString()})
+        response.status(200).json({token:token,otp:otp.toString()})
         
       }
 });
+
+router.post('/resendotp',async (request,response)=>{
+  const otp=Math.floor(100000 + Math.random() * 900000)
+  const transporter = nodemailer.createTransport({
+    service: 'Gmail',
+    secure: false,
+    port: 535,
+    auth: {
+      user: "crowdlearn69@gmail.com",
+      pass: "abcd@1234",
+    },
+    tls: {
+      rejectUnauthorized: false,
+    },
+    // connectionTimeout: 5 * 60 * 1000,
+  });
+  if(request.body.username ===undefined || request.body.email===undefined || request.body.username ==="" || request.body.email ===""  ){
+    response.status(401).json({message:"bad request missing parameters"})
+  }else{
+      transporter
+        .sendMail({
+          to: request.body.email,
+          from: "crowdlearn69@gmail.com",
+          subject: 'CROWD LEARNT OTP',
+          html: `<h2>WELCOME TO CROWDLEARN</h2> Your NEW ONE-TIME-PASSWORD is ${otp}`
+        })
+        const token=jwt.sign({username:request.body.username},"jwtsecret")
+        response.status(200).json({token:token,otp:otp.toString(),otpstatus:"otp-resent"})
+      }
+});
+
 router.put('/verifyuser/:email',async (req,res)=>{
   registertemplatecopy.findOneAndUpdate({email: req.params.email},{verified:true})
   .then(data => {
@@ -61,7 +106,6 @@ router.put('/verifyuser/:email',async (req,res)=>{
           message: `Update Unsuccessful`
         });
       } else {
-   
           res.status(200).send("Update Succesful")
       }   
     })
@@ -70,33 +114,12 @@ router.put('/verifyuser/:email',async (req,res)=>{
         message: "Error in updating" 
       });
     }); 
- 
-
 });
-const verifyToken=(req,res,next)=>{
-  const token=req.headers["x-access-token"];
-  console.log(token);
-  if(!token){
-    res.status(401)
-  }else{
-    jwt.verify(token,"jwtsecret",(err,decoded)=>{
-      if(err){
-        res.json({isAuthenticated:false,status:401})
-      }else{
-        req.userId=decoded.id
-        next()
-      }
-     
-    })
-  }
-}
 
 router.get('/find',async(req,res)=>{
     registertemplatecopy.find({})
         .then(posts=>{
             res.json(posts)
-       
-   
         }).catch(err => {
             console.log(err)
           })
