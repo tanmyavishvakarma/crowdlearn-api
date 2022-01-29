@@ -151,11 +151,10 @@ router.post("/resendotp", async (request, response) => {
       });
       const token = jwt.sign({ username: request.body.username }, "jwtsecret");
       response
-        .status(400)
+        .status(200)
         .json({
           token: token,
           otp: otp.toString(),
-          otpstatus: "otp did not match",
         });
     }
   }
