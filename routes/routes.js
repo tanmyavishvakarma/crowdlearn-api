@@ -9,6 +9,35 @@ const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const res = require("express/lib/response");
 
+const transporter = nodemailer.createTransport({
+  service: "Gmail",
+  secure: false,
+  port: 535,
+  auth: {
+    user: "crowdlearn69@gmail.com",
+    pass: "abcd@1234",
+  },
+  tls: {
+    rejectUnauthorized: false,
+  },
+  // connectionTimeout: 5 * 60 * 1000,
+});
+
+function createToken(user) {
+  if (!user.username) {
+    return jwt.sign(
+      { username: user.username, email: user.email },
+      "jwtsecret"
+    );
+  } else {
+    return jwt.sign({ email: user.email }, "jwtsecret");
+  }
+}
+
+function generateOTP() {
+  return Math.floor(100000 + Math.random() * 900000);
+}
+
 const verifyToken = (req, res, next) => {
   const token = req.headers["x-access-token"];
   console.log(token);
@@ -27,20 +56,8 @@ const verifyToken = (req, res, next) => {
 };
 
 router.post("/register", async (request, response) => {
-  const otp = Math.floor(100000 + Math.random() * 900000);
-  const transporter = nodemailer.createTransport({
-    service: "Gmail",
-    secure: false,
-    port: 535,
-    auth: {
-      user: "crowdlearn69@gmail.com",
-      pass: "abcd@1234",
-    },
-    tls: {
-      rejectUnauthorized: false,
-    },
-    // connectionTimeout: 5 * 60 * 1000,
-  });
+  const otp = generateOTP();
+
   if (
     request.body.username === undefined ||
     request.body.email === undefined ||
@@ -64,45 +81,45 @@ router.post("/register", async (request, response) => {
       html: `<h2>WELCOME TO CROWDLEARN</h2> Your ONE-TIME-PASSWORD is ${otp}`,
     });
 
-    const token = jwt.sign({ username: registeruser.username }, "jwtsecret");
+    const token = createToken(registeruser);
 
     response.status(200).json({ token: token, otp: otp.toString() });
   }
 });
 
+// LOGIN:
+// gets email from flutter
+// if the fields are missing give error : 401
+// else find that email in the database
+// if exists : send OTP
+// if does not exist send status something
+
 router.post("/login", async (request, response) => {
-  const otp = Math.floor(100000 + Math.random() * 900000);
-  const transporter = nodemailer.createTransport({
-    service: "Gmail",
-    secure: false,
-    port: 535,
-    auth: {
-      user: "crowdlearn69@gmail.com",
-      pass: "abcd@1234",
-    },
-    tls: {
-      rejectUnauthorized: false,
-    },
-    // connectionTimeout: 5 * 60 * 1000,
-  });
-  if (
-    request.body.username === undefined ||
-    request.body.email === undefined ||
-    request.body.username === "" ||
-    request.body.email === ""
-  ) {
+  const otp = generateOTP();
+
+  if (request.body.email === undefined || request.body.email === "") {
     response.status(401).json({ message: "bad request missing parameters" });
   } else {
-    transporter.sendMail({
-      to: request.body.email,
-      from: "crowdlearn69@gmail.com",
-      subject: "CROWD LEARNT OTP",
-      html: `<h2>WELCOME TO CROWDLEARN</h2> Your NEW ONE-TIME-PASSWORD is ${otp}`,
+    // check database
+
+    const user = await registertemplatecopy.findOne({
+      email: request.body.email,
     });
-    const token = jwt.sign({ username: request.body.username }, "jwtsecret");
-    response
-      .status(200)
-      .json({ token: token, otp: otp.toString(), otpstatus: "otp-resent" });
+
+    if (!user) {
+      response.status(404).json({ message: "User does not exist" });
+    } else {
+      transporter.sendMail({
+        to: request.body.email,
+        from: "crowdlearn69@gmail.com",
+        subject: "CROWD LEARNT OTP",
+        html: `<h2>WELCOME TO CROWDLEARN</h2> Your NEW ONE-TIME-PASSWORD is ${otp}`,
+      });
+      const token = createToken(registeruser);
+      response
+        .status(200)
+        .json({ token: token, otp: otp.toString(), otpstatus: "otp-resent" });
+    }
   }
 });
 
@@ -121,20 +138,8 @@ router.post("/resendotp", async (request, response) => {
       .status(403)
       .json({ message: "too many unsuccessful tries" });
   } else {
-    const otp = Math.floor(100000 + Math.random() * 900000);
-    const transporter = nodemailer.createTransport({
-      service: "Gmail",
-      secure: false,
-      port: 535,
-      auth: {
-        user: "crowdlearn69@gmail.com",
-        pass: "abcd@1234",
-      },
-      tls: {
-        rejectUnauthorized: false,
-      },
-      // connectionTimeout: 5 * 60 * 1000,
-    });
+    const otp = generateOTP();
+
     if (
       request.body.username === undefined ||
       request.body.email === undefined ||
@@ -149,13 +154,13 @@ router.post("/resendotp", async (request, response) => {
         subject: "CROWD LEARNT OTP",
         html: `<h2>WELCOME TO CROWDLEARN</h2> Your NEW ONE-TIME-PASSWORD is ${otp}`,
       });
-      const token = jwt.sign({ username: request.body.username }, "jwtsecret");
-      response
-        .status(200)
-        .json({
-          token: token,
-          otp: otp.toString(),
-        });
+
+      const token = createToken(registeruser);
+
+      response.status(200).json({
+        token: token,
+        otp: otp.toString(),
+      });
     }
   }
 });
