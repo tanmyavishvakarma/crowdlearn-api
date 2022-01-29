@@ -65,7 +65,7 @@ router.post("/register", async (request, response) => {
   ) {
     response.status(401).json({ message: "bad request missing parameters" });
   } else {
-    const user =registertemplatecopy.findOne({email: request.body.email,username: request.body.username})
+    const user =await registertemplatecopy.findOne({email: request.body.email})
     if(!user){
       const registeruser = new registertemplatecopy({
         username: request.body.username,
@@ -82,7 +82,7 @@ router.post("/register", async (request, response) => {
         html: `<h2>WELCOME TO CROWDLEARN</h2> Your ONE-TIME-PASSWORD is ${otp}`,
       });
       const token = createToken(registeruser);
-      response.status(201).json({ token: token, otp: otp.toString() });
+      response.status(201).json({ token: token, otp: otp.toString()});
     }else{
       response.status(400).json({message:"user already exits please login"})
     }
@@ -169,7 +169,7 @@ router.post("/resendotp", async (request, response) => {
 });
 
 router.put("/verifyuser/:email", async (req, res) => {
-  registertemplatecopy
+  await registertemplatecopy
     .findOneAndUpdate({ email: req.params.email }, { verified: true })
     .then((data) => {
       if (!data) {
