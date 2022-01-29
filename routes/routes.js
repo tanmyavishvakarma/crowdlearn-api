@@ -84,7 +84,7 @@ router.post("/register", async (request, response) => {
       const token = createToken(registeruser);
       response.status(201).json({ token: token, otp: otp.toString() });
     }else{
-      response.status(303).json({message:"user already exits please login"})
+      response.status(400).json({message:"user already exits please login"})
     }
     
   }
@@ -115,7 +115,7 @@ router.post("/login", async (request, response) => {
       transporter.sendMail({
         to: request.body.email,
         from: "crowdlearn69@gmail.com",
-        subject: "CROWD LEARNT LOGIN OTP ",
+        subject: "CROWD LEARN LOGIN OTP ",
         html: `<h2>CROWD LEARN LOGIN ATTEMPT</h2> Your NEW ONE-TIME-PASSWORD is ${otp}`,
       });
       const token = createToken(user);
