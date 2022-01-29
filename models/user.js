@@ -31,7 +31,7 @@ const user = new mongoose.Schema({
   },
   otptries:{
     type: Number,
-    default:1,
+    default:0,
     required: true,
   },
   dateCreated : {
