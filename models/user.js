@@ -22,12 +22,13 @@ const user = new mongoose.Schema({
   },
   rating : {
       type: Number,
-      required: false,
+      default:0,
+      required: true,
   },
   sessionsGiven : {
     type : Number,
     default: 0,
-    required: false,
+    required: true,
   },
   otptries:{
     type: Number,

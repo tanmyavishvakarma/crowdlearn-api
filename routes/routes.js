@@ -57,7 +57,6 @@ const verifyToken = (req, res, next) => {
 
 router.post("/register", async (request, response) => {
   const otp = generateOTP();
-
   if (
     request.body.username === undefined ||
     request.body.email === undefined ||
@@ -66,24 +65,28 @@ router.post("/register", async (request, response) => {
   ) {
     response.status(401).json({ message: "bad request missing parameters" });
   } else {
-    const registeruser = new registertemplatecopy({
-      username: request.body.username,
-      email: request.body.email,
-    });
-    console.log(registeruser);
-    await registeruser.save().catch((err) => {
-      console.log(err);
-    });
-    transporter.sendMail({
-      to: registeruser.email,
-      from: "crowdlearn69@gmail.com",
-      subject: "CROWD LEARNT OTP",
-      html: `<h2>WELCOME TO CROWDLEARN</h2> Your ONE-TIME-PASSWORD is ${otp}`,
-    });
-
-    const token = createToken(registeruser);
-
-    response.status(200).json({ token: token, otp: otp.toString() });
+    const user =registertemplatecopy.findOne({email: request.body.email,username: request.body.username})
+    if(!user){
+      const registeruser = new registertemplatecopy({
+        username: request.body.username,
+        email: request.body.email,
+      });
+      console.log(registeruser);
+      await registeruser.save().catch((err) => {
+        console.log(err);
+      });
+      transporter.sendMail({
+        to: registeruser.email,
+        from: "crowdlearn69@gmail.com",
+        subject: "CROWD LEARNT OTP",
+        html: `<h2>WELCOME TO CROWDLEARN</h2> Your ONE-TIME-PASSWORD is ${otp}`,
+      });
+      const token = createToken(registeruser);
+      response.status(201).json({ token: token, otp: otp.toString() });
+    }else{
+      response.status(303).json({message:"user already exits please login"})
+    }
+    
   }
 });
 
@@ -118,7 +121,7 @@ router.post("/login", async (request, response) => {
       const token = createToken(user);
       response
         .status(200)
-        .json({ token: token, otp: otp.toString() });
+        .json({ token: token, otp: otp.toString(),user:user });
     }
   }
 });
