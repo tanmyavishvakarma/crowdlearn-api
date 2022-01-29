@@ -98,7 +98,7 @@ router.post("/login", async (request, response) => {
   const otp = generateOTP();
 
   if (request.body.email === undefined || request.body.email === "") {
-    response.status(401).json({ message: "bad request missing parameters" });
+    response.status(400).json({ message: "bad request missing parameters" });
   } else {
     // check database
 
@@ -115,7 +115,7 @@ router.post("/login", async (request, response) => {
         subject: "CROWD LEARNT LOGIN OTP ",
         html: `<h2>CROWD LEARN LOGIN ATTEMPT</h2> Your NEW ONE-TIME-PASSWORD is ${otp}`,
       });
-      const token = createToken(registeruser);
+      const token = createToken(user);
       response
         .status(200)
         .json({ token: token, otp: otp.toString() });
