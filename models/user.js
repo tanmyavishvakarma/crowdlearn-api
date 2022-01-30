@@ -35,6 +35,10 @@ const user = new mongoose.Schema({
     default:0,
     required: true,
   },
+  otptime:{
+    type:Number,
+    required: false,
+  },
   dateCreated : {
     type: Date,
     default : Date.now(),
