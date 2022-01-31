@@ -30,12 +30,12 @@ const user = new mongoose.Schema({
     default: 0,
     required: true,
   },
-  otptries:{
+  otpTries:{
     type: Number,
     default:0,
     required: true,
   },
-  otptime:{
+  otpTime:{
     type:Number,
     required: false,
   },
