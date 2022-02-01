@@ -7,7 +7,7 @@ const review = new mongoose.Schema({
     // Subject schema - > jis topic pr review diya
 
     content : {
-        type : 'string',
+        type : String,
         required : true,
     },
 

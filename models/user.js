@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-
+const Schema = mongoose.Schema;
 const user = new mongoose.Schema({
   username: {
     type: String,
@@ -39,11 +39,18 @@ const user = new mongoose.Schema({
     type:Number,
     required: false,
   },
+  sessions:[
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Session',
+    },
+  ],
   dateCreated : {
     type: Date,
     default : Date.now(),
     required: true,
   },
+ 
 });
 
-module.exports = mongoose.model("RegisteredUser", user);
+module.exports = mongoose.model("User", user);

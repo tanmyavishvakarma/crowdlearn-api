@@ -1,18 +1,12 @@
-const { request, response } = require("express");
+
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
 const cookieparser = require("cookie-parser");
 const bodyParser = require("body-parser");
-const registertemplatecopy = require("../models/user");
+const registertemplatecopy = require("../models/User");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
-const res = require("express/lib/response");
-
-// converts date into time (mini seconds)
-const secparse = (date) => {
-  return date.getTime();
-};
 
 // generates transporter of nodemailer
 const transporter = nodemailer.createTransport({
@@ -46,22 +40,6 @@ function generateOTP() {
   return Math.floor(100000 + Math.random() * 900000);
 }
 
-const verifyToken = (req, res, next) => {
-  const token = req.headers["x-access-token"];
-  console.log(token);
-  if (!token) {
-    return res.status(401);
-  } else {
-    jwt.verify(token, "jwtsecret", (err, user) => {
-      if (err) {
-        return res.status(403);
-      } else {
-        req.user = user;
-        next();
-      }
-    });
-  }
-};
 
 // REGISTER:
 // registering user for the firrst time
@@ -258,7 +236,7 @@ router.put("/verifyuser/:email", async (req, res) => {
 
 router.get("/find", async (req, res) => {
   registertemplatecopy
-    .find({})
+    .find({email:"tdizzle528@gmail.com"}).populate('sessions')
     .then((posts) => {
       res.json(posts);
     })

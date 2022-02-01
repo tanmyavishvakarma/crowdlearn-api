@@ -1,25 +1,42 @@
 const mongoose = require("mongoose");
-
+const Schema = mongoose.Schema;
 const session = new mongoose.Schema({
     // user schema -> jo dega session ()
     //   subject schema -> jis topic ka session hai
     // reviews -> review schema ki array
-
+    user:{
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+    },
+    subject:{
+        type:Schema.Types.ObjectId,
+        ref:'Subject',
+        required:false,
+    },
+    review:[
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Review',
+            required:false,
+        }
+    ],
     glink:{
-        type: 'string',
-        required: true,
+        type: String,
+        required: false,
     },
     likes : {
-        type: 'number',
+        type: Number,
         required: true,
+        default:0,
     },
     dislikes : {
-        type: 'number',
+        type: Number,
         required: true,
+        default:0,
     },
     dateToBeHeld : {
         type: Date,
-        required: true,
+        required: false,
     },
     dateCreated : {
         type: Date,
