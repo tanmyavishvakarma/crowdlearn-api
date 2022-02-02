@@ -234,15 +234,6 @@ router.put("/verifyuser/:email", async (req, res) => {
     });
 });
 
-router.get("/find", async (req, res) => {
-  registertemplatecopy
-    .find({email:"tdizzle528@gmail.com"}).populate('sessions')
-    .then((posts) => {
-      res.json(posts);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-});
+
 
 module.exports = router;

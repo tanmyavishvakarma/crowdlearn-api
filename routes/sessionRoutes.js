@@ -1,11 +1,7 @@
 
 const express = require("express");
 const router = express.Router();
-const cookieparser = require("cookie-parser");
-const bodyParser = require("body-parser");
 const registertemplatecopy=require("../models/User")
-const jwt = require("jsonwebtoken");
-const verifyToken = require("../middleware/verifyToken")
 const sessionCopy=require("../models/Session")
 // const nodemailer = require("nodemailer");
 

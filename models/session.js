@@ -20,6 +20,11 @@ const session = new mongoose.Schema({
             required:false,
         }
     ],
+    isComplete : {
+        type : Boolean,
+        required:true,
+        default:false
+    },
     glink:{
         type: String,
         required: false,
