@@ -27,7 +27,7 @@ const sessionSchema = new mongoose.Schema({
     },
     glink:{
         type: String,
-        required: false,
+        required: true,
     },
     likes : {
         type: Number,
@@ -40,8 +40,8 @@ const sessionSchema = new mongoose.Schema({
         default:0,
     },
     dateToBeHeld : {
-        type: Date,
-        required: false,
+        type: String,
+        required: true,
     },
     dateCreated : {
         type: Date,
