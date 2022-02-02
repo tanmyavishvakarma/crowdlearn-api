@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const subject = new mongoose.Schema({
+const subjectSchema = new mongoose.Schema({
   class: {
     type: String,
     required: true,
@@ -20,4 +20,4 @@ const subject = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("Subject", subject);
+module.exports = mongoose.model("subject", subjectSchema);

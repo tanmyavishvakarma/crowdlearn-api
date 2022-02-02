@@ -4,7 +4,7 @@ const router = express.Router();
 const bcrypt = require("bcrypt");
 const cookieparser = require("cookie-parser");
 const bodyParser = require("body-parser");
-const registertemplatecopy = require("../models/User");
+const registertemplatecopy = require("../models/user");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 

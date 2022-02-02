@@ -1,12 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const registertemplatecopy = require("../models/User");
+const registertemplatecopy = require("../models/user");
+const verifyToken = require("../middleware/verifyToken")
 
-
-router.get("/find", async (req, res) => {
-  if (req.body.email === undefined || req.body.email === "") {
-    res.status(400).json({ message: "bad request missing parameters" });
-  } else {
+router.get("/find", verifyToken ,async (req, res) => {
+  // yaha pe req.user ayega
     registertemplatecopy
       .findOne({ email: req.body.email })
       .populate("sessions")
@@ -22,7 +20,6 @@ router.get("/find", async (req, res) => {
       .catch((err) => {
         console.log(err);
       });
-  }
 });
 
 module.exports = router;

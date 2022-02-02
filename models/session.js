@@ -1,22 +1,22 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const session = new mongoose.Schema({
+const sessionSchema = new mongoose.Schema({
     // user schema -> jo dega session ()
     //   subject schema -> jis topic ka session hai
     // reviews -> review schema ki array
     user:{
         type: Schema.Types.ObjectId,
-        ref: 'User',
+        ref: 'user',
     },
     subject:{
         type:Schema.Types.ObjectId,
-        ref:'Subject',
+        ref:'subject',
         required:false,
     },
     review:[
         {
             type: Schema.Types.ObjectId,
-            ref: 'Review',
+            ref: 'review',
             required:false,
         }
     ],
@@ -50,4 +50,4 @@ const session = new mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model("Session", session);
+module.exports = mongoose.model("session", sessionSchema);

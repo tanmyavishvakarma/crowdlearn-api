@@ -1,11 +1,11 @@
 const mongoose = require("mongoose");
 
-const request = new mongoose.Schema({
+const requestSchema = new mongoose.Schema({
 //   subject schema
 // comment ok
     subject :{
         type: Schema.Types.ObjectId,
-        ref: 'Subject',
+        ref: 'subject',
         required:true,
     },
     username:{
@@ -24,4 +24,4 @@ const request = new mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model("Request", request);
+module.exports = mongoose.model("request", requestSchema);

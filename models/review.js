@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 
-const review = new mongoose.Schema({
+const reviewSchema = new mongoose.Schema({
     // user schema -> jisne review diya
     // user Schema -> jisko review diya
     // Subject schema - > jis topic pr review diya
@@ -18,4 +18,4 @@ const review = new mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model("Review", review);
+module.exports = mongoose.model("review", reviewSchema);

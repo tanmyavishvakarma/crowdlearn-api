@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const user = new mongoose.Schema({
+const userSchema = new mongoose.Schema({
   username: {
     type: String,
     required: true,
@@ -43,7 +43,7 @@ const user = new mongoose.Schema({
   sessions:[
     {
       type: Schema.Types.ObjectId,
-      ref: 'Session',
+      ref: 'session',
     },
   ],
   dateCreated : {
@@ -54,4 +54,4 @@ const user = new mongoose.Schema({
  
 });
 
-module.exports = mongoose.model("User", user);
+module.exports = mongoose.model("user", userSchema);
