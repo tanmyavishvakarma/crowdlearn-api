@@ -8,9 +8,10 @@ const requestSchema = new mongoose.Schema({
         ref: 'subject',
         required:true,
     },
-    username:{
-        type: 'string',
-        required: true,
+    user:{
+        type: Schema.Types.ObjectId,
+        ref: 'user',
+        required:true,
     },
     votes : {
         type: 'number',
