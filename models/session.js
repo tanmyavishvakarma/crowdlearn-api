@@ -43,6 +43,11 @@ const sessionSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    epochTime:{
+        type:Number,
+        default:0,
+        required: true,
+    },
     dateCreated : {
         type: Date,
         default : Date.now(),

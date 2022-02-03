@@ -11,6 +11,8 @@ router.post("/create", verifyToken, async (req, res) => {
   if (
     req.body.class === undefined ||
     req.body.class === "" ||
+    req.body.epochTime === undefined ||
+    req.body.epochTime === "" ||
     req.body.category === undefined ||
     req.body.category === "" ||
     req.body.topic === undefined ||
@@ -44,6 +46,7 @@ router.post("/create", verifyToken, async (req, res) => {
         subject: id,
         glink: req.body.glink,
         dateToBeHeld: req.body.dateToBeHeld,
+        epochTime:req.body.epochTime,
       });
       await session
         .save()
@@ -72,8 +75,13 @@ router.post("/create", verifyToken, async (req, res) => {
 
 router.get("/getAll", async (req, res) => {
   // yaha pe req.user ayega
+  var currentTime = new Date();
+  currentTime = currentTime.getTime();
+ 
   sessionCopy
     .find({})
+    .where('epochTime').gte(currentTime)
+    .sort({epochTime:1})
     .populate("subject")
     .populate("user")
     .then((data) => {
