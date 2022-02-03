@@ -25,13 +25,14 @@ const transporter = nodemailer.createTransport({
 
 // takes a user generates a JWT token on the basis of whatever is present in the "user"(email , username) or (email)
 function createToken(user) {
+  console.log(user)
   if (user.username) {
     return jwt.sign(
-      { username: user.username, email: user.email },
+      { username: user.username, email: user.email ,id:_id},
       "jwtsecret"
     );
   } else {
-    return jwt.sign({ email: user.email }, "jwtsecret");
+    return jwt.sign({ email: user.email,id:_id }, "jwtsecret");
   }
 }
 
