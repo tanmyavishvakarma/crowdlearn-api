@@ -7,22 +7,25 @@ const subjectCopy = require("../models/subject");
 // const nodemailer = require("nodemailer");
 
 router.post("/create", verifyToken, async (req, res) => {
+    
   if (
-    request.body.class === undefined ||
-    request.body.class === "" ||
-    request.body.category === undefined ||
-    request.body.category === "" ||
-    request.body.topic === undefined ||
-    request.body.topic === "" ||
-    request.body.glink === undefined ||
-    request.body.glink === "" ||
-    request.body.dateToBeHeld === undefined ||
-    request.body.dateToBeHeld === ""
+    req.body.class === undefined ||
+    req.body.class === "" ||
+    req.body.category === undefined ||
+    req.body.category === "" ||
+    req.body.topic === undefined ||
+    req.body.topic === "" ||
+    req.body.glink === undefined ||
+    req.body.glink === "" ||
+    req.body.dateToBeHeld === undefined ||
+    req.body.dateToBeHeld === ""
   ) {
-    return response
+    // console.log("aagye yaha tk\n\n\n\n\n");
+    return res
       .status(400)
       .json({ message: "bad request missing parameters" });
   }
+  
   const subject = new subjectCopy({
     class: req.body.class,
     category: req.body.category,
@@ -34,9 +37,10 @@ router.post("/create", verifyToken, async (req, res) => {
       if (!data) {
         return response.status(404).json({ message: "Data does not exist" });
       }
+      
       const id = data._id;
       const session = new sessionCopy({
-        user: req.body.userId,
+        user: req.user.id,
         subject: id,
         glink: req.body.glink,
         dateToBeHeld: req.body.dateToBeHeld,
@@ -50,7 +54,7 @@ router.post("/create", verifyToken, async (req, res) => {
               .json({ message: "Data does not exist" });
           }
           await registertemplatecopy.findOneAndUpdate(
-            { _id: req.body.userId },
+            { _id: req.user.id },
             { $push: { sessions: data._id } }
           );
         })
