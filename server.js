@@ -30,13 +30,13 @@ app.use(cors({
     credentials:true
 }))
 
-app.use(session({
-    secret:'secret',
-    resave:true,
-    saveUninitialized:true
-}))
+// app.use(session({
+//     secret:'secret',
+//     resave:true,
+//     saveUninitialized:true
+// }))
 
-app.use(cookieparser("secret"))
+// app.use(cookieparser("secret"))
 
 app.use(express.json())
 app.use('/auth',authRoutes)
