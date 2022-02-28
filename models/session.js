@@ -29,7 +29,8 @@ const sessionSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    likes : {
+    //qwertyuytrewertyuyrewertyuiuytrertyui
+    numLikes : {
         type: Number,
         required: true,
         default:0,

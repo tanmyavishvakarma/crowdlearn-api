@@ -119,6 +119,7 @@ router.post("/likes",verifyToken,async (req, res) => {
       $push:{session: req.body.sessionId}
     })
   }
+  //qwertyuikjytrewqwertyuiuytrewqwertyuytrewertyuytrewertyu 
   await sessionCopy
     .findByIdAndUpdate({_id: req.body.sessionId},{$inc:{numLikes:1}})
     .then((data) => {
