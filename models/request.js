@@ -13,10 +13,10 @@ const requestSchema = new mongoose.Schema({
         ref: 'user',
         required:true,
     },
-    votes : {
-        type: 'number',
+    numLikes : {
+        type: Number,
         required: true,
-        default:1,
+        default:0,
     },
     dateCreated : {
         type: Date,
