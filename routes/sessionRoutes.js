@@ -4,7 +4,7 @@ const registertemplatecopy = require("../models/user");
 const sessionCopy = require("../models/session");
 const verifyToken = require("../middleware/verifyToken");
 const subjectCopy = require("../models/subject");
-// const nodemailer = require("nodemailer");
+const likeCopy = require("../models/like");
 
 router.post("/create", verifyToken, async (req, res) => {
     
@@ -96,31 +96,34 @@ router.get("/getAll", async (req, res) => {
       res.status(500).json({ message: "Internal error" });
     });
 });
+router.put("/likes",verifyToken,async (req, res) => {
 
-router.put("/likes/:status",async (req, res) => {
-  var incr=0;
-  var decr=0;
-  if(req.params.status=="like") {
-    incr=1;
-    decr=0;
-  }
-  else{
-    incr=0;
-    decr=1;
-  }
-  await sessionCopy
-    .findByIdAndUpdate({_id: req.body.sessionId},{$inc:{likes:incr,dislikes:decr}})
-    .then((data) => {
-      if (!data) {
-        res.status(404).json({ message: "Data Not Found" });
-      } else {
-        res.status(200).json(data);
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(500).json({ message: "Internal error" });
-    });
-});
+})
+
+// router.put("/likes/:status",async (req, res) => {
+//   var incr=0;
+//   var decr=0;
+//   if(req.params.status=="like") {
+//     incr=1;
+//     decr=0;
+//   }
+//   else{
+//     incr=0;
+//     decr=1;
+//   }
+//   await sessionCopy
+//     .findByIdAndUpdate({_id: req.body.sessionId},{$inc:{likes:incr,dislikes:decr}})
+//     .then((data) => {
+//       if (!data) {
+//         res.status(404).json({ message: "Data Not Found" });
+//       } else {
+//         res.status(200).json(data);
+//       }
+//     })
+//     .catch((err) => {
+//       console.log(err);
+//       res.status(500).json({ message: "Internal error" });
+//     });
+// });
 
 module.exports = router;
