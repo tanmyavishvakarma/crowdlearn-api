@@ -96,8 +96,42 @@ router.get("/getAll", async (req, res) => {
       res.status(500).json({ message: "Internal error" });
     });
 });
-router.put("/likes",verifyToken,async (req, res) => {
 
+
+router.post("/likes",verifyToken,async (req, res) => {
+  console.log(req.user);
+  const user = await likeCopy.findOne({
+    user: req.user.id,
+  });
+  if (!user) {
+    // register the user in Mongo and save
+    const likeUser = new likeCopy({
+      user: req.user.id,
+      $push:{session: req.body.sessionId}
+    });
+    await likeUser.save().catch((err) => {
+      console.log(err);
+    });
+  }else{
+    await likeCopy.findOneAndUpdate({
+      user:req.user.id,
+    },{
+      $push:{session: req.body.sessionId}
+    })
+  }
+  await sessionCopy
+    .findByIdAndUpdate({_id: req.body.sessionId},{$inc:{numLikes:1}})
+    .then((data) => {
+      if (!data) {
+        res.status(404).json({ message: "Data Not Found" });
+      } else {
+        res.status(200).json(data);
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json({ message: "Internal error" });
+    });
 })
 
 // router.put("/likes/:status",async (req, res) => {
